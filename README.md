@@ -72,3 +72,12 @@ sudo ufw enable 9090/tcp
 
 ![Alt text](images/9090view.png)
 
+
+...Next steps:
+- config prometheus.yaml on app server
+- check if prometheus service use /etc/prometheus/prometheus.yaml config file
+- check if its gathering requests
+- establish communication between grafana hosted on different machine and prometheus node that hosts app
+- do simple dashboard
+
+
