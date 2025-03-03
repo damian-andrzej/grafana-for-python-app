@@ -61,3 +61,14 @@ if __name__ == "__main__":
     app.wsgi_app = make_wsgi_app()
 ```
 
+
+### Configuration 
+
+You need access port 9090 for prometheus api actions, if its disable use following command:
+
+```bash
+sudo ufw enable 9090/tcp
+```
+
+![Alt text](images/9090view.png)
+
