@@ -40,7 +40,7 @@ from prometheus_client.exposition import basic_auth_handler
 ```
 
 
-### Running the App
+## Running the App
 
 To communicate with prometheus we need API route to provide a way to send out metrics to client. 
 This route setting creates /metrics page that will be our API 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 ```
 
 
-### Configuration 
+## Configuration 
 
 You need access port 9090 for prometheus api actions, if its disable use following command:
 
@@ -73,10 +73,26 @@ sudo ufw enable 9090/tcp
 ![Alt text](images/9090view.png)
 
 
+
+### Prometheus config
+
+By default its placed under /etc/prometheus/prometheus.yaml, to start monitoring the app endpoint you need add following lines
+
+```yaml
+global:
+  scrape_interval: 5s  # How often Prometheus scrapes data
+
+scrape_configs:
+  - job_name: flask_app
+    static_configs:
+      - targets: ["IP_ADDRES/HOSTNAME:5000"]
+```
+
+
 ...Next steps:
-- config prometheus.yaml on app server
-- check if prometheus service use /etc/prometheus/prometheus.yaml config file
-- check if its gathering requests
+- config prometheus.yaml on app server DONE
+- check if prometheus service use /etc/prometheus/prometheus.yaml config file DONE
+- check if its gathering requests DONE
 - establish communication between grafana hosted on different machine and prometheus node that hosts app
 - do simple dashboard
 
