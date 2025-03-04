@@ -39,6 +39,11 @@ from prometheus_client.exposition import basic_auth_handler
  pip install prometheus_client
 ```
 
+### Grafana
+
+```bash
+apt-install grafana-server
+```
 
 ## Running the App
 
@@ -95,5 +100,11 @@ scrape_configs:
 - check if its gathering requests DONE
 - establish communication between grafana hosted on different machine and prometheus node that hosts app
 - do simple dashboard
+
+### Grafana config
+
+Grafana interface is available on http://localhost:3000. Login and password is admin. Go to settings->data source->prometheus
+
+Set your servername:9090 where you are hosting the app. If you do it locally its http://localhost:9090
 
 
