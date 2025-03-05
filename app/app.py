@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 # Create a metric to track requests
 REQUEST_COUNT = Counter('flask_requests_total', 'Total number of requests')
+PAGE_VIEWS = Counter("flask_page_views", "Count of page views", ["endpoint"])
 
 
 
@@ -56,6 +57,7 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 #@limiter.limit("5 per minute")  # Limit login attempts
 def login():
+    PAGE_VIEWS.labels(endpoint="home").inc() # Counter for login(main page) metrics
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -74,6 +76,7 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
+    PAGE_VIEWS.labels(endpoint="dashboard").inc()   ## Counter for dashboard metrics
     username = session.get('username', 'Guest')  # Get username from session
     return f"Welcome to the Dashboard, {username}!"  # Personalize the welcome message
 
