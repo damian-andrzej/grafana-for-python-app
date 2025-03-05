@@ -1,5 +1,5 @@
 # grafana-for-python-app
-Setting up Grafana dashboards that monitor web application created in Python hosted on Kubernetes containers
+Setting up Grafana dashboards that monitor web application created in Python hosted on docker containers
 
 # Grafana Monitoring for Python Application
 
