@@ -48,7 +48,17 @@ apt-install grafana-server
 ## Running the App
 
 To communicate with prometheus we need API route to provide a way to send out metrics to client. 
-This route setting creates /metrics page that will be our API 
+This route setting creates /metrics page that will count requests number for specific endpoints
+
+Declaration of variables that counts page views
+
+```python
+# Create a metric to track requests
+REQUEST_COUNT = Counter('flask_requests_total', 'Total number of requests')
+PAGE_VIEWS = Counter("flask_page_views", "Count of page views", ["endpoint"])
+```
+
+And metrics for specific endpoints
 
 ```python
 @app.route('/metrics')
@@ -56,6 +66,14 @@ def metrics():
     # Increment the request counter for each request to the app
     REQUEST_COUNT.inc()
     return generate_latest()
+
+@app.route('/login')
+def login():
+    PAGE_VIEWS.labels(endpoint="home").inc()
+
+@app.route('/dashboard')
+def dashboard():
+    PAGE_VIEWS.labels(endpoint="dashboard").inc()
 ```
 
 and this line that allows the communicate process to run..
@@ -105,6 +123,23 @@ scrape_configs:
 
 Grafana interface is available on http://localhost:3000. Login and password is admin. Go to settings->data source->prometheus
 
-Set your servername:9090 where you are hosting the app. If you do it locally its http://localhost:9090
+Set your servername:9090 where you are hosting the app. If you do it locally its http://localhost:9090.
+All metrics that are gathered are available under http://SERVER_NAME:PORT/metrics for example http://localhost:8080/metrics
+
+![Alt text](images/grafana_metrics.png)
+
+### Dashboard
+
+To track number of page's views go query : flask_page_views_total
+
+![Alt text](images/metrics_code.png)
+
+
+
+
+It looks like this - one colour for one endpoint views line
+
+![Alt text](images/dash_graph.png)
+
 
 
