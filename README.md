@@ -122,7 +122,7 @@ All metrics that are gathered are available under http://SERVER_NAME:PORT/metric
 
 ![Alt text](images/grafana_metrics.png)
 
-### Dashboard
+### Dashboard - app usage
 
 To track number of page's views go query : flask_page_views_total
 
@@ -134,6 +134,23 @@ To track number of page's views go query : flask_page_views_total
 It looks like this - one colour for one endpoint views line
 
 ![Alt text](images/dash_graph.png)
+
+
+### Dashboard - server usage
+
+To gather information about resource usage we need different queries. Fortunatelly we dont need to configure anything because prometheus stores basic resource stats by default
+Then lets create a dashboard.
+
+```pomQL
+#for CPU
+100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+#for RAM
+100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))
+```
+
+![Alt text](images/cpu_graph.png)
+
 
 
 
