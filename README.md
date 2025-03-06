@@ -112,12 +112,6 @@ scrape_configs:
 ```
 
 
-...Next steps:
-- config prometheus.yaml on app server DONE
-- check if prometheus service use /etc/prometheus/prometheus.yaml config file DONE
-- check if its gathering requests DONE
-- establish communication between grafana hosted on different machine and prometheus node that hosts app
-- do simple dashboard
 
 ### Grafana config
 
@@ -140,6 +134,7 @@ To track number of page's views go query : flask_page_views_total
 It looks like this - one colour for one endpoint views line
 
 ![Alt text](images/dash_graph.png)
+
 
 
 
