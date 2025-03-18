@@ -84,6 +84,9 @@ if __name__ == "__main__":
     app.wsgi_app = make_wsgi_app()
 ```
 
+There is various of metrics that we are able to track via this library. Some of them listed below
+
+![Alt text](images/metrics.png)
 
 ## Configuration 
 
