@@ -117,7 +117,7 @@ scrape_configs:
 
 Grafana interface is available on http://localhost:3000. Login and password is admin. Go to settings->data source->prometheus
 
-Set your servername:9090 where you are hosting the app. If you do it locally its http://localhost:9090.
+Set your servername:9090 where you are host the app. If you do it locally its http://localhost:9090.
 All metrics that are gathered are available under http://SERVER_NAME:PORT/metrics for example http://localhost:8080/metrics
 
 ![Alt text](images/grafana_metrics.png)
