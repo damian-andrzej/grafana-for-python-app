@@ -155,6 +155,23 @@ Then lets create a dashboard.
 
 ![Alt text](images/cpu_graph.png)
 
+If your environment requires additional metrics check documentation of **client_python** library, there is huge number of various metrics
+that may improve your monitoring overall usability. For example :
+
+- disk usage
+- 
+```promql
+node_filesystem_free_bytes / node_filesystem_size_bytes * 100
+```
+
+  
+- network usage
+
+```promql
+rate(node_network_receive_bytes_total[5m])
+```
+
+
 
 
 
