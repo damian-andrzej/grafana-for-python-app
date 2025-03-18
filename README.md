@@ -142,7 +142,7 @@ It looks like this - one colour for one endpoint views line
 
 ### Dashboard - server usage
 
-To gather information about resource usage we need different queries. Fortunatelly we dont need to configure anything because prometheus stores basic resource stats by default
+To gather information about resource usage we need different queries. Fortunatelly we dont need to configure anything because prometheus stores basic resource stats by default.
 Then lets create a dashboard.
 
 ```pomQL
