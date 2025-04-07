@@ -1,5 +1,5 @@
 # grafana-for-python-app
-Setting up Grafana dashboards that monitor web application created in Python hosted on docker containers
+Setting up Grafana dashboards that monitor web application created in Python. App is hosted on docker containers
 
 # Grafana Monitoring for Python Application
 
@@ -13,6 +13,7 @@ This project sets up Grafana to monitor the performance and metrics of a Python 
 - [Grafana Dashboard](#grafana-dashboard)
 - [Running the Application](#running-the-application)
 - [Configuration](#configuration)
+- [Bonus - Loki](#loki)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
 
@@ -172,7 +173,56 @@ rate(node_network_receive_bytes_total[5m])
 ```
 
 
+## Loki
+
+Loki is a log aggregation system developed by Grafana Labs, designed to efficiently collect, store, and query logs. Unlike traditional log systems, Loki only indexes metadata (labels), making it cost-effective and scalable. It works seamlessly with Promtail (log shipper) and Grafana, allowing you to correlate logs with metrics using a unified interface. Loki & Prometheus connected each other create a full stack log system, he is a breakdown
+
+![Alt text](images/lokivsprom.png)
 
 
+### Startup Settings
 
+Except of Grafana we need Loki server and client which is named promtail, definition of containers below:
+
+```yaml
+services:
+  loki:
+    image: grafana/loki:2.9.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    volumes:
+      - /var/log:/var/log
+      - /etc/machine-id:/etc/machine-id
+      - ./promtail-config.yaml:/etc/promtail/config.yaml
+    command: -config.file=/etc/promtail/config.yaml
+
+
+```
+
+Here we got config, that in this example will gather logs from /var/log directory
+
+```yaml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*log
+```
 
