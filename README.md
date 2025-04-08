@@ -226,3 +226,10 @@ scrape_configs:
           __path__: /var/log/*log
 ```
 
+### DataSource connection
+
+Enter your Grafana frontend then go to datasource option. To establish connection with loki you need provide endpoint url. In our config(docker-compose) all containers within one network comunicates so we are able to use service names.
+ **http://loki:3100**
+
+ ![Alt text](images/datasource.png)
+
