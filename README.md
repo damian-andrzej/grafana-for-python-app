@@ -13,7 +13,7 @@ This project sets up Grafana to monitor the performance and metrics of a Python 
 - [Grafana Dashboard](#grafana-dashboard)
 - [Running the Application](#running-the-application)
 - [Configuration](#configuration)
-- [Bonus - Loki](#loki)
+- [Loki - Log aggregation](#loki)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
 
