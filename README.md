@@ -160,7 +160,7 @@ If your environment requires additional metrics check documentation of **client_
 that may improve your monitoring overall usability. For example :
 
 - disk usage
-- 
+
 ```promql
 node_filesystem_free_bytes / node_filesystem_size_bytes * 100
 ```
@@ -357,8 +357,9 @@ Then we can play with Grafana charts :). Remember that for application logs job 
 {job="vflasklogs"} |= "error" ## search errors only 
 ```
 
-as we see, first logs starts to flow
+
 ![Alt text](images/datasource2.png)
 
+as we see, first logs starts to flow
 
 
