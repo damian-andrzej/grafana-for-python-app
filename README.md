@@ -235,7 +235,22 @@ Enter your Grafana frontend then go to datasource option. To establish connectio
 
  ### System logs
 
- Lets visualize system logs gathered from /var/log directory. Promtail is the agent that have config of everything we are monitoring. Quick reminder :
+ Lets visualize system logs gathered from /var/log directory. Promtail is the agent that have config of everything we are monitoring. WARNING : Promtail container must have folder mapped as volume to read logs from machnie folders.
+ Quick reminder:
+
+ ```yaml
+promtail:
+    image: grafana/promtail:2.9.0
+    volumes:
+      - /root/flask-app/CICD-Docker-for-python-webapp/logs:/var/log/flask
+      - /var/log:/var/log
+      - /etc/machine-id:/etc/machine-id
+      - ./promtail-config.yaml:/etc/promtail/config.yaml
+    command: -config.file=/etc/promtail/config.yaml
+    networks:
+      - monitor
+```
+**We monitor /var/log local machine folder and map it as /var/log/ inside promtail container**
 
  ```yaml
 server:
@@ -264,5 +279,86 @@ Focus on the last line, we define here a jobs that tracks specific logs. From Gr
 {job="varlogs"} |= ``
 {job="varlogs"} |= "error" ## search errors only 
 ```
+![Alt text](images/errorlogs.png)
 
- ![Alt text](images/errorlogs.png)
+
+### Application logs
+
+All the apps got various log files systems, so before implementation you need to make sure where exactly its located. By default Python flask app logs sends to stdout and there is no specific file.
+We need some modification to make the logs in one specific place. Lets set the location to **/var/log/flask_app.log**
+INFO : You dont need to add "logging" import to requirements.txt as its standart python library
+
+```python
+import logging
+
+logging.basicConfig(filename='/var/log/flask_app.log',
+                    level=logging.INFO,
+                    format='%(asctime)s %(levelname)s: %(message)s')
+
+```
+
+We can customize log output by defining functions, for example :
+
+```python
+@app.route("/")
+def index():
+    app.logger.info("🏠 Index route hit")
+    return "Hello from Dockerized Flask!"
+
+@app.route("/logtest")
+def logtest():
+    app.logger.info("🧪 Log test route hit")
+    return "Logging works!"
+```
+
+Lets connect our python logs with Loki promtail client
+
+```yaml
+job: flasklogs
+          __path__: /flask-app/CICD-Docker-for-python-webapp/logs/*
+```
+
+We must mapp local app folder to promtail container as we did with system logs before
+**We monitor CICD-Docker-for-python local application folder and map it as /var/log/flask inside promtail container**
+
+```yaml
+volumes:
+      - /root/flask-app/CICD-Docker-for-python-webapp/logs:/var/log/flask
+```
+
+
+The final step is to add another job to promtail config file
+
+```yaml
+scrape_configs:
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*log
+
+
+
+  - job_name: app
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: flasklogs
+          __path__: /var/log/flask/app.log
+```
+
+Then we can play with Grafana charts :). Remember that for application logs job name is different, look carefully on "label" part of yaml file
+
+```logql
+{job="flasklogs"} |= ``
+{job="vflasklogs"} |= "error" ## search errors only 
+```
+
+as we see, first logs starts to flow
+![Alt text](images/datasource2.png)
+
+
+
