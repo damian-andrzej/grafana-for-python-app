@@ -233,3 +233,36 @@ Enter your Grafana frontend then go to datasource option. To establish connectio
 
  ![Alt text](images/datasource.png)
 
+ ### System logs
+
+ Lets visualize system logs gathered from /var/log directory. Promtail is the agent that have config of everything we are monitoring. Quick reminder :
+
+ ```yaml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*log
+```
+
+Focus on the last line, we define here a jobs that tracks specific logs. From Grafana side its easy to visualize it
+
+```logql
+{job="varlogs"} |= ``
+{job="varlogs"} |= "error" ## search errors only 
+```
+
+ ![Alt text](images/errorlogs.png)
